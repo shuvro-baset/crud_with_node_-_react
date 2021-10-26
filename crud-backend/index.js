@@ -62,7 +62,18 @@ async function run() {
         };
         const result = await usersCollection.updateOne(filter, updateDoc, options) // updating 
         res.json(result) // send response to frontend
-      })
+      }); 
+
+      // DELETE API
+      app.delete('/users/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await usersCollection.deleteOne(query);
+
+        console.log('deleting user with id ', result);
+
+        res.json(result);
+    })
     } finally {
     //   await client.close();
     }

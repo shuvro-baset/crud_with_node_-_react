@@ -12,7 +12,24 @@ const Users = () => {
             .then(data => setUsers(data));
     }, []);
 
-
+    // DELETE AN USER
+    const handleDeleteUser = id => {
+        const proceed = window.confirm('Are you sure, you want to delete?');
+        if (proceed) {
+            const url = `http://localhost:5000/users/${id}`;
+            fetch(url, {
+                method: 'DELETE'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.deletedCount > 0) {
+                        alert('deleted successfully');
+                        const remainingUsers = users.filter(user => user._id !== id);
+                        setUsers(remainingUsers);
+                    }
+                });
+        }
+    }
     return (
         <Container>
                 <h2 className="text-center my-3"> Number of Users ....  {!users && <span>0</span> } 
@@ -34,7 +51,7 @@ const Users = () => {
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <Link to={`/update-user/${user._id}`}><button className="btn btn-info">update</button></Link>
-                                    <Link to={`/delete-user/${user._id}`}><button className="btn btn-danger">delete</button></Link>
+                                    <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger" >delete</button>
                                 </div>
                             </div>
                         </Col>
