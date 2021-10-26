@@ -28,7 +28,13 @@ async function run() {
         const users = await cursor.toArray();
         res.send(users);
     });
-
+      // POST API
+      app.post('/add-users', async (req, res) => {
+        const newUser = req.body
+        const result = await usersCollection.insertOne(newUser);
+        res.send(result);
+        // console.log(newUser)
+      })
     } finally {
     //   await client.close();
     }

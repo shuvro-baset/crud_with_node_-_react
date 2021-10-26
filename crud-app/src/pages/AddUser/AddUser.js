@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 
 const AddUser = () => {
@@ -18,6 +18,21 @@ const AddUser = () => {
         const email = emailRef.current.value;
 
         const newUser = { fname: fName, lname: lName, address: address, email: email };
+        fetch('http://localhost:5000/add-users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(newUser)
+        })
+        .then(res => res.json())
+            .then(data => {
+                if (data.insertedId) {
+                    alert('Successfully added the user.')
+                    e.target.reset();
+                }
+            })
+        e.preventDefault();
         console.log(newUser)
     }
     return (
