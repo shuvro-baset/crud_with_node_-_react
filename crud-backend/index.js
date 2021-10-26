@@ -26,8 +26,23 @@ async function run() {
       // GET API
       app.get('/users', async (req, res) => {
         const cursor = usersCollection.find({});
-        const users = await cursor.toArray();
-        res.send(users);
+        // receiving page and size
+        const page = req.query.page;
+        const size = parseInt(req.query.size);
+        // const users = await cursor.toArray();
+        // code for pagination 
+        const count = await cursor.count(); // count total data
+        let users;
+        if (page) {
+          users = await cursor.skip(page * size).limit(size).toArray();
+        }
+        else {
+            users = await cursor.toArray();
+        }
+        res.send({
+          users,
+          count
+        });
     });
       // POST API
       app.post('/add-users', async (req, res) => {

@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import './Users.css'
 const Users = () => {
 
     const [users, setUsers] = useState([]); 
-
+    const [page, setPage] = useState(0); // page number state
+    const [pageCount, setPageCount] = useState(0); // pageCount state
+    const size = 3
     useEffect(() => {
-        fetch('http://localhost:5000/users')
+        fetch(`http://localhost:5000/users?page=${page}&&size=${size}`)
             .then(res => res.json())
-            .then(data => setUsers(data));
-    }, []);
+            .then(data => {
+                setUsers(data.users)
+                const count = data.count;
+                const pageNumber = Math.ceil(count/size);
+                setPageCount(pageNumber);
+                
+            });
+    }, [page]);
 
     // DELETE AN USER
     const handleDeleteUser = id => {
@@ -57,6 +65,18 @@ const Users = () => {
                         </Col>
                     )
                 }
+            </Row>
+            <Row className="py-3">
+            <div className="pagination d-flex justify-content-center align-items-center">
+                        {
+                            [...Array(pageCount).keys()]
+                                .map(number => <button
+                                    className={number === page ? 'selected' : ''}
+                                    key={number}
+                                    onClick={() => setPage(number)}
+                                >{number + 1}</button>)
+                        }
+                    </div>
             </Row>
         </Container>
     );
