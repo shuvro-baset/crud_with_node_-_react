@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 
 const AddUser = () => {
