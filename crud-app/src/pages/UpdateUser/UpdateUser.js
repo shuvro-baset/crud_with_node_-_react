@@ -7,6 +7,7 @@ const UpdateUser = () => {
     const [user, setUser] = useState({});
     const {userId} = useParams()
 
+    // getting specific user information 
     useEffect(()=> {
         const uri = `http://localhost:5000/update-user/${userId}`;
         fetch(uri)

@@ -59,6 +59,9 @@ const Users = () => {
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center">
                                     <Link to={`/update-user/${user._id}`}><button className="btn btn-info">update</button></Link>
+
+
+                                    
                                     <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger" >delete</button>
                                 </div>
                             </div>

@@ -25,6 +25,8 @@ const AddUser = () => {
             },
             body: JSON.stringify(newUser)
         })
+
+        // ------
         .then(res => res.json())
             .then(data => {
                 if (data.insertedId) {
