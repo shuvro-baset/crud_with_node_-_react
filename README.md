@@ -43,8 +43,7 @@
     - app.get('/users', async (req, res) => {
         const cursor = usersCollection.find({});
         const users = await cursor.toArray();
-        res.send(
-          users);
+        
     });
 * database কালেকশন এর ডাটা দিবে।  
 * ব্যাকএন্ড সেই ডাটা নিয়ে ফ্রন্টএন্ড এ পাঠাবে।  
@@ -62,6 +61,7 @@
 * ডাটাবেস এ থাকা কোনো ডাটা কে আপডেট করা
 
 * এটি কিছুটা পোস্ট মেথড এর মতো।  ফ্রন্টএন্ড থেকে ডাটা নিয়ে ব্যাকএন্ড এর ইউআরএল কল করবে। তবে এখানে গুরুত্বপূর্ণ বিষয় হলো যে অবজেক্ট এর ডাটা আপডেট করতে চাই।  সেই অবজেক্ট ইউনিক id পাস করা। (চাইলে অন্য কোনো প্রপার্টি দিয়েও কাজটি করা যায়। )
+
     - const url = `http://localhost:5000/update-user/${userId}`;
         fetch(url, {
             method: 'PUT',
@@ -70,6 +70,7 @@
             },
             body: JSON.stringify(user)
         })
+
 * ব্যাকএন্ড ওই ইউনিক Id আর ডাটা পাবে।  Id দিয়ে আমরা ফিল্টার করবো কোনো কালেকশন এর কোন অবজেক্ট এর ডাটা আপডেট করতে চাচ্ছি।  সেই কালেকশন এর কাছে ইউনিক Id আর নতুন ডাটা পাঠাবো।  
     - app.put('/update-user/:id', async (req, res) => {
         const id = req.params.id;
@@ -102,4 +103,30 @@
             })
 
 # `DELETE`
-* 
+* ডাটাবেস এর কোনো ডাটা ডিলিট করা।  
+* ফ্রন্টএন্ড এ ডিলিট বাটন এ ক্লিক করলে ডিলিট এর ইউআরএল কল হবে 
+    - <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger" >delete</button>
+* যে ডাটা ডিলিট করতে চাই তার ইউনিক Id পাঠাতে হবে যাতে করে আমরা কোয়েরি করে ডাটাবেস থেকে সেই নির্দিষ্ট ডাটা ডিলিট করতে পারি।  
+    - const handleDeleteUser = id => {
+        const proceed = window.confirm('Are you sure, you want to delete?');
+        if (proceed) {
+            const url = `http://localhost:5000/users/${id}`;
+            fetch(url, {
+                method: 'DELETE'
+            })
+
+* ব্যাকএন্ড req.params.id থেকে একটা Id পাবে।  id  দিয়ে কোয়েরি করে ডাটাবেস এর যে  কালেকশন  এর ডাটা ডিলিট করতে চাই সেই কালেকশন এ কল দিবে।
+    - app.delete('/users/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await usersCollection.deleteOne(query);
+    }
+* ডাটাবেস এ ঐ নির্দিষ্ট কালেকশন এ Id এর সাথে ম্যাচ করলে ডাটা ডিলিট করে দিবে।  
+* ব্যাকএন্ড থেকে ফ্রন্টএন্ড এ একটি রেসপন্স পাঠানো হবে।  
+    - res.json(result);
+* ফ্রন্টএন্ড এ সাকসেস মেসেজ দেখাবো।  
+    - .then(res => res.json())
+                .then(data => {
+                    if (data.deletedCount > 0) {
+                        alert('deleted successfully');
+                    }

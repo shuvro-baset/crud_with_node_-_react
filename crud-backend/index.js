@@ -49,7 +49,6 @@ async function run() {
         const newUser = req.body // receive data from frontend
         const result = await usersCollection.insertOne(newUser); // save data to the database
         res.send(result); // send response to the frontend.
-        // console.log(newUser)
       });
 
       // get single user info
